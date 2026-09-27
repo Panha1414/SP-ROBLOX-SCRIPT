@@ -1,6 +1,6 @@
 --[[
 ============================================================
-  SPX HUB — STEAL AN EGG (Custom Edition)
+  SPX HUB — STEAL AN EGG (Escape Edition)
   Created for: Sopha Panha
   Place ID: 107778070777162
 ============================================================
@@ -13,14 +13,15 @@ local StarterGui      = game:GetService("StarterGui")
 
 local LocalPlayer     = Players.LocalPlayer
 
--- 🎨 THEME & CONFIG
+-- 🎨 CONFIG & STATE
 local CONFIG = {
-    AutoStealEnabled  = false,
-    AutoCollectEnabled = false,
-    SpeedBoostEnabled = false,
-    ESPEnabled        = false,
-    SpeedValue        = 60,
-    StealInterval     = 0.2,
+    AutoStealEnabled    = false,
+    AutoCollectEnabled  = false,
+    SpeedBoostEnabled   = false,
+    ESPEnabled          = false,
+    TeleportEscape      = true, -- គេចខ្លួនស្វ័យប្រវត្តិក្រោយពេលលួច
+    SpeedValue          = 60,
+    StealInterval       = 0.3,
 }
 
 local function notify(title, text)
@@ -31,7 +32,7 @@ local function notify(title, text)
     end)
 end
 
--- 🔍 REMOTE RESOLVER (ស្វែងរក Remote ស្វ័យប្រវត្តិពីលទ្ធផល Scanner)
+-- 🔍 REMOTE RESOLVER
 local function getRemote(name)
     for _, obj in ipairs(ReplicatedStorage:GetDescendants()) do
         if (obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction")) and obj.Name:lower() == name:lower() then
@@ -44,15 +45,44 @@ end
 local remoteSteal = getRemote("SetSteal") or getRemote("StealEgg")
 local remoteCollect = getRemote("AskFieldEggCarry") or getRemote("CollectEgg")
 
--- 🛡️ SILENT STEAL (លួចដោយមិនផ្ញើ Target ទីតាំងខ្លួនឯង ដើម្បីកុំឱ្យសត្វដេញតាម)
+-- 🏠 រកមើលទីតាំង Base របស់អ្នកផ្ទាល់ដើម្បីជាកន្លែងគេចខ្លួន
+local function getMyBasePosition()
+    local plots = workspace:FindFirstChild("Plots")
+    if not plots then return Vector3.new(0, 10, 0) end
+    for _, plot in ipairs(plots:GetChildren()) do
+        local data = plot:FindFirstChild("Data")
+        local owner = data and data:FindFirstChild("Owner")
+        if owner and owner:IsA("ObjectValue") then
+            local v = owner.Value
+            if v and (v.Name == LocalPlayer.Name or tostring(v) == tostring(LocalPlayer.UserId)) then
+                return plot:GetPivot().Position + Vector3.new(0, 5, 0)
+            end
+        end
+    end
+    return Vector3.new(0, 10, 0) -- Fallback position
+end
+
+-- ⚡ TELEPORT ESCAPE 
+local function escapeToSafety()
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local safePos = getMyBasePosition()
+        hrp.CFrame = CFrame.new(safePos)
+    end
+end
+
+-- 🛡️ SILENT STEAL + ESCAPE
 local function silentSteal()
     if remoteSteal then
         pcall(function()
             if remoteSteal:IsA("RemoteEvent") then
-                -- ផ្ញើសញ្ញា True ដោយមិនបញ្ជូន Player Position ដើម្បីបន្លมប្រព័ន្ធសត្វដេញ
                 remoteSteal:FireServer(true)
             end
         end)
+        if CONFIG.TeleportEscape then
+            task.delay(0.05, escapeToSafety) -- ហោះគេចភ្លាមៗក្រោយបញ្ជូនសញ្ញាលួច
+        end
     end
 end
 
@@ -120,7 +150,7 @@ local function makeGUI()
     gui.Parent = guiParent
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 280, 0, 360)
+    frame.Size = UDim2.new(0, 280, 0, 390)
     frame.Position = UDim2.new(0, 30, 0, 80)
     frame.BackgroundColor3 = Color3.fromRGB(10, 20, 40)
     frame.BorderSizePixel = 0
@@ -146,14 +176,14 @@ local function makeGUI()
     title.Size = UDim2.new(1, -15, 1, 0)
     title.Position = UDim2.new(0, 15, 0, 0)
     title.BackgroundTransparency = 1
-    title.Text = "✦ SPX HUB — STEAL AN EGG ✦"
+    title.Text = "✦ SPX HUB — ESCAPE MODE ✦"
     title.TextColor3 = Color3.fromRGB(255, 255, 255)
     title.Font = Enum.Font.GothamBold
-    title.TextSize = 13
+    title.TextSize = 12
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = header
 
-    -- Scrolling Frame for Buttons
+    -- Scrolling Frame
     local scroll = Instance.new("ScrollingFrame")
     scroll.Size = UDim2.new(1, 0, 1, -50)
     scroll.Position = UDim2.new(0, 0, 0, 45)
@@ -197,6 +227,7 @@ local function makeGUI()
     end
 
     addToggle("Silent Auto Steal", "AutoStealEnabled")
+    addToggle("Auto-Escape (Teleport)", "TeleportEscape")
     addToggle("Auto Collect Eggs", "AutoCollectEnabled")
     addToggle("Speed Boost (60)", "SpeedBoostEnabled", function(on)
         applySpeed(on)
@@ -224,4 +255,4 @@ end)
 
 -- INITIALIZE
 pcall(makeGUI)
-notify("SPX Hub", "Script loaded successfully!")
+notify("SPX Hub", "Escape Mode loaded successfully!")
