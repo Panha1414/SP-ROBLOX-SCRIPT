@@ -7,7 +7,7 @@
 
 -- [1] LOGO SETTINGS
 -- ប្តូរ ID ទៅជា Roblox Image Asset ID របស់អ្នក
-local LOGO_ID = 134486997418064
+local LOGO_ID = "rbxassetid://134486997418064"
 
 --==================================================
 -- [2] LOAD RAYFIELD UI
