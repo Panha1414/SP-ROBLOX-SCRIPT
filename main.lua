@@ -1,10 +1,10 @@
 -- ដំណើរការ Rayfield UI Library
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
--- បង្កើតផ្ទាំង UI គោល
+-- បង្កើតផ្ទាំង UI គោល (Script Hub)
 local Window = Rayfield:CreateWindow({
-   Name = "SP ROBLOX SCRIPT",
-   LoadingTitle = "កំពុងបើក SP ROBLOX SCRIPT...",
+   Name = "SP ROBLOX SCRIPT HUB",
+   LoadingTitle = "កំពុងបើក SP HUB...",
    LoadingSubtitle = "បង្កើតដោយ: សុផា បញ្ញា",
    ConfigurationSaving = {
       Enabled = true,
@@ -16,40 +16,57 @@ local Window = Rayfield:CreateWindow({
       Invite = "SPROBLOX", 
       RememberJoins = true
    },
-   KeySystem = false -- ដូរទៅ true បើសិនជាចង់តម្រូវឲ្យអ្នកលេងវាយ Key មុនចូល
+   KeySystem = false
 })
 
--- បង្កើត Tab សម្រាប់ដាក់មុខងារ
-local MainTab = Window:CreateTab("🏠 ទំព័រដើម", nil)
-local MainSection = MainTab:CreateSection("មុខងារទូទៅ (General)")
+---------------------------------------------------------
+-- Tab ទី១៖ Steal an Egg (អ្នកអាចប្តូរឈ្មោះបាន)
+---------------------------------------------------------
+local EggTab = Window:CreateTab("🥚 Steal an Egg", nil)
+local EggSection = EggTab:CreateSection("មុខងារសម្រាប់ហ្គេម Steal an Egg")
 
--- បង្កើតប៊ូតុងសម្រាប់ដំណើរការកូដ Tenshi ដើមពីក្រោយ (បើចង់បានមុខងាររបស់វា)
-MainTab:CreateButton({
-   Name = "បើកមុខងារ Tenshi Finder",
+-- បន្ថែមប៊ូតុងសម្រាប់ Codiumhub
+EggTab:CreateButton({
+   Name = "បើក Codiumhub (Android & IOS RAM 4GB+)",
    Callback = function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/syss1211/Tenshi-script/abbe55c9c3d75025f1cc0459c1135c1bb65d9d17/Tenshi-Finder-Beta.lua"))()
-       Rayfield:Notify({
-           Title = "ជោគជ័យ",
-           Content = "មុខងារត្រូវបានបើកដំណើរការ!",
-           Duration = 3,
-           Image = 4483362458,
-       })
+       loadstring(game:HttpGet("https://getcodium.xyz/loader.luau"))()
+       Rayfield:Notify({Title = "SP HUB", Content = "កំពុងដំណើរការ Codiumhub...", Duration = 3})
    end,
 })
 
--- បង្កើត Toggle សម្រាប់បិទបើកមុខងារ Farm
-MainTab:CreateToggle({
-   Name = "Auto Farm (សាកល្បង)",
-   CurrentValue = false,
-   Flag = "AutoFarm", 
-   Callback = function(Value)
-       -- កន្លែងសរសេរកូដ Auto Farm បន្ថែម
-       print("Auto Farm ដំណើរការ: ", Value)
+-- បន្ថែមប៊ូតុងសម្រាប់ CHILLI HUB SCRIPT
+EggTab:CreateButton({
+   Name = "បើក CHILLI HUB SCRIPT (Android)",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
+       Rayfield:Notify({Title = "SP HUB", Content = "កំពុងដំណើរការ CHILLI HUB...", Duration = 3})
    end,
 })
 
--- បង្កើត Tab ព័ត៌មាន
+-- បន្ថែមប៊ូតុងសម្រាប់ Script FYY
+EggTab:CreateButton({
+   Name = "បើក Script FYY (IOS)",
+   Callback = function()
+       loadstring(game:HttpGet("https://FyyCommunity.net"))()
+       Rayfield:Notify({Title = "SP HUB", Content = "កំពុងដំណើរការ Script FYY...", Duration = 3})
+   end,
+})
+
+-- បន្ថែមប៊ូតុងសម្រាប់ Venyxhub
+EggTab:CreateButton({
+   Name = "បើក Venyxhub (smoother and faster)",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/Venyx/main/VenyxHub"))()
+       Rayfield:Notify({Title = "SP HUB", Content = "កំពុងដំណើរការ Venyxhub...", Duration = 3})
+   end,
+})
+
+---------------------------------------------------------
+-- Tab ទី៣៖ ព័ត៌មានទំនាក់ទំនង
+---------------------------------------------------------
 local InfoTab = Window:CreateTab("ℹ️ ព័ត៌មាន", nil)
+InfoTab:CreateSection("ទំនាក់ទំនង Admin")
 InfoTab:CreateLabel("Developer: @sophapanha")
 InfoTab:CreateLabel("Telegram Channel: @SPROBLOX")
 InfoTab:CreateLabel("YouTube: @sp_roblox1")
+InfoTab:CreateLabel("Website: sp-roblox.vercel.app")
